@@ -11,13 +11,16 @@ import { poem, wishes } from './content.js'
 
 // Добавляй новые экраны сюда — навигация и точки подстроятся сами
 // (перед Finale, он должен оставаться последним)
+// long: true — у экрана есть свой скролл (длинный текст), тогда весь экран
+// не перетаскиваем свайпом, чтобы не конфликтовать со скроллом текста —
+// переход на такие экраны и с них идёт через точки-индикатор или стрелку «дальше»
 const SCREENS = [
-  () => <Intro />,
-  () => <TextScreen {...poem} />,
-  () => <Reasons />,
-  () => <TextScreen {...wishes} />,
-  () => <Cake />,
-  ({ restart }) => <Finale restart={restart} />,
+  { long: false, render: () => <Intro /> },
+  { long: !!poem.long, render: () => <TextScreen {...poem} /> },
+  { long: false, render: () => <Reasons /> },
+  { long: !!wishes.long, render: () => <TextScreen {...wishes} /> },
+  { long: false, render: () => <Cake /> },
+  { long: false, render: ({ restart }) => <Finale restart={restart} /> },
 ]
 
 const variants = {
@@ -41,8 +44,19 @@ export default function App() {
     })
   }, [])
 
+  // переход сразу на конкретный экран — для точек-индикатора
+  const goTo = useCallback((target) => {
+    if (lock.current) return
+    setPage(([i]) => {
+      if (target === i) return [i, 0]
+      lock.current = true
+      setTimeout(() => (lock.current = false), 900)
+      return [target, target > i ? 1 : -1]
+    })
+  }, [])
+
   // «Ещё раз»: плавно возвращаемся к первому экрану (анимация — вниз)
-  const restart = useCallback(() => setPage([0, -1]), [])
+  const restart = useCallback(() => goTo(0), [goTo])
 
   // Колесо мыши и клавиатура — для десктопа
   useEffect(() => {
@@ -62,12 +76,12 @@ export default function App() {
     }
   }, [go])
 
-  const Screen = SCREENS[index]
+  const { render: Render, long } = SCREENS[index]
 
   return (
     <div className="app">
       <div className="bg" />
-      <FloatingHearts />
+      <FloatingHearts count={10} />
 
       <AnimatePresence initial={false} custom={dir} mode="popLayout">
         <motion.div
@@ -79,7 +93,9 @@ export default function App() {
           animate="center"
           exit="exit"
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          drag="y"
+          // на «длинных» экранах драг выключен — иначе он конфликтует
+          // со скроллом текста внутри карточки на телефоне
+          drag={long ? false : 'y'}
           dragConstraints={{ top: 0, bottom: 0 }}
           dragElastic={0.25}
           onDragEnd={(_, { offset, velocity }) => {
@@ -87,13 +103,18 @@ export default function App() {
             else if (offset.y > 60 || velocity.y > 400) go(-1)
           }}
         >
-          <Screen restart={restart} />
+          <Render restart={restart} go={go} />
         </motion.div>
       </AnimatePresence>
 
       <div className="dots">
         {SCREENS.map((_, i) => (
-          <span key={i} className={i === index ? 'dot active' : 'dot'} />
+          <button
+            key={i}
+            className={i === index ? 'dot active' : 'dot'}
+            aria-label={`Экран ${i + 1}`}
+            onClick={() => goTo(i)}
+          />
         ))}
       </div>
 

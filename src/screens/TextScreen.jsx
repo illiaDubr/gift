@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion'
 
-// Универсальный текстовый экран: заголовок + карточка со строками
-export default function TextScreen({ title, lines, long = false }) {
+// Универсальный текстовый экран: заголовок + карточка со строками.
+// На «длинных» экранах свайп по всему экрану выключен (см. App.jsx),
+// поэтому добавляем стрелку — понятный способ пойти дальше с телефона.
+export default function TextScreen({ title, lines, long = false, go }) {
   return (
     <div className="screen poem">
       <motion.h2
@@ -32,6 +34,28 @@ export default function TextScreen({ title, lines, long = false }) {
           ),
         )}
       </div>
+
+      {long && (
+        <motion.button
+          className="next-hint"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.4, duration: 1 }}
+          onClick={(e) => {
+            e.stopPropagation()
+            go?.(1)
+          }}
+          aria-label="Дальше"
+        >
+          <motion.span
+            animate={{ y: [0, 6, 0] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            ⌄
+          </motion.span>
+          дальше
+        </motion.button>
+      )}
     </div>
   )
 }

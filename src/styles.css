@@ -32,24 +32,30 @@ body,
   /* мобильный first: на десктопе ограничиваем «телефонной» колонкой */
   max-width: 520px;
   margin: 0 auto;
-  touch-action: none;
+  /* pan-y (не none): иначе ни один вложенный скролл (например, в карточке
+     пожеланий) в принципе не смог бы прокручиваться на телефоне — дочерний
+     touch-action не может «переопределить» none у предка */
+  touch-action: pan-y;
   user-select: none;
 }
 
 .bg {
   position: absolute;
-  inset: 0;
+  /* элемент больше вьюпорта, чтобы двигать его transform'ом без пустых краёв */
+  inset: -12%;
   background:
     radial-gradient(circle at 20% 15%, #fff0f5 0%, transparent 45%),
     radial-gradient(circle at 85% 80%, #ffb3cb 0%, transparent 50%),
     linear-gradient(160deg, #ffe3ec, #ffc2d6 60%, #ffaac6);
-  background-size: 140% 140%;
-  animation: bgShift 14s ease-in-out infinite alternate;
+  /* анимируем transform, а не background-position — это почти бесплатно для GPU,
+     в отличие от постоянной перерисовки градиента (была основная причина лагов) */
+  animation: bgShift 16s ease-in-out infinite alternate;
+  will-change: transform;
 }
 
 @keyframes bgShift {
-  from { background-position: 0% 0%; }
-  to { background-position: 100% 100%; }
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(-5%, -5%, 0) scale(1.04); }
 }
 
 /* На десктопе показываем фон и по бокам от колонки */
@@ -155,11 +161,18 @@ body,
 }
 
 .poem-card.long {
-  max-height: 70dvh;
+  max-height: 62dvh;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
+  overscroll-behavior: contain;
   padding: 26px 20px;
   text-align: left;
+  /* blur во время скролла — самая тяжёлая операция для мобильного GPU,
+     поэтому у прокручиваемой карточки просто более плотный фон без blur */
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .poem-card.long p {
@@ -422,6 +435,20 @@ body,
 }
 
 .dot {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+/* сама точка рисуется псевдоэлементом — так кликабельная область (22px)
+   больше, чем визуальный размер, что удобнее для пальца */
+.dot::before {
+  content: '';
   width: 7px;
   height: 7px;
   border-radius: 50%;
@@ -429,10 +456,35 @@ body,
   transition: all 0.5s ease;
 }
 
-.dot.active {
+.dot.active::before {
   background: var(--deep);
   height: 22px;
   border-radius: 4px;
+}
+
+.next-hint {
+  position: absolute;
+  bottom: calc(18px + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  border: none;
+  background: none;
+  color: var(--deep);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  opacity: 0.75;
+  cursor: pointer;
+  padding: 6px 14px;
+}
+
+.next-hint span {
+  font-size: 1.4rem;
+  line-height: 1;
 }
 
 .music-btn {
