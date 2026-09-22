@@ -1,0 +1,476 @@
+:root {
+  --rose: #ff5c8a;
+  --deep: #c2185b;
+  --ink: #7a2346;
+  --cream: #fff5f8;
+  --font-script: 'Marck Script', 'Caveat', cursive;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  background: #ffd9e4;
+  color: var(--ink);
+  font-family: var(--font-serif);
+}
+
+.app {
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  /* мобильный first: на десктопе ограничиваем «телефонной» колонкой */
+  max-width: 520px;
+  margin: 0 auto;
+  touch-action: none;
+  user-select: none;
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 15%, #fff0f5 0%, transparent 45%),
+    radial-gradient(circle at 85% 80%, #ffb3cb 0%, transparent 50%),
+    linear-gradient(160deg, #ffe3ec, #ffc2d6 60%, #ffaac6);
+  background-size: 140% 140%;
+  animation: bgShift 14s ease-in-out infinite alternate;
+}
+
+@keyframes bgShift {
+  from { background-position: 0% 0%; }
+  to { background-position: 100% 100%; }
+}
+
+/* На десктопе показываем фон и по бокам от колонки */
+@media (min-width: 521px) {
+  html, body {
+    background: linear-gradient(160deg, #ffe3ec, #ffb3cb);
+  }
+  .app {
+    box-shadow: 0 0 80px rgba(194, 24, 91, 0.18);
+  }
+}
+
+.floaters {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.floater {
+  position: absolute;
+  top: 0;
+  color: var(--rose);
+}
+
+.page {
+  position: absolute;
+  inset: 0;
+  cursor: grab;
+}
+
+.screen {
+  height: 100%;
+  padding: env(safe-area-inset-top) 24px env(safe-area-inset-bottom);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- Intro ---------- */
+.heart-svg {
+  width: min(92vw, 460px);
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 8px 18px rgba(194, 24, 91, 0.25));
+}
+
+.heart-word {
+  font-family: var(--font-script);
+  fill: url(#heartGrad);
+  letter-spacing: 0.02em;
+}
+
+.heart-inside {
+  font-family: var(--font-script);
+  fill: var(--deep);
+}
+
+.hint {
+  position: absolute;
+  bottom: calc(44px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--deep);
+  opacity: 0.8;
+}
+
+.hint span:first-child {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+/* ---------- Poem ---------- */
+.poem h2 {
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-size: 2.6rem;
+  margin: 0 0 20px;
+  color: var(--deep);
+}
+
+.poem-card {
+  width: 100%;
+  padding: 32px 24px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 28px;
+  box-shadow: 0 12px 40px rgba(194, 24, 91, 0.15);
+}
+
+.poem-card p {
+  margin: 0;
+  font-size: 1.35rem;
+  line-height: 1.6;
+}
+
+.poem-card.long {
+  max-height: 70dvh;
+  overflow-y: auto;
+  touch-action: pan-y;
+  padding: 26px 20px;
+  text-align: left;
+}
+
+.poem-card.long p {
+  font-size: 1.12rem;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.poem-card.long p:last-child {
+  margin-bottom: 0;
+  text-align: center;
+  font-family: var(--font-script);
+  font-size: 1.5rem;
+  color: var(--deep);
+}
+
+.poem-card .gap {
+  height: 16px;
+}
+
+/* ---------- Finale ---------- */
+.finale {
+  text-align: center;
+  gap: 8px;
+}
+
+.finale-heart {
+  font-size: 5.5rem;
+  line-height: 1;
+  color: var(--rose);
+  filter: drop-shadow(0 8px 16px rgba(194, 24, 91, 0.35));
+}
+
+.finale h2 {
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-size: 2.6rem;
+  line-height: 1.15;
+  margin: 12px 0 0;
+  color: var(--deep);
+}
+
+.finale-sub {
+  margin: 0 0 28px;
+  font-size: 1.3rem;
+  font-style: italic;
+}
+
+.again-btn {
+  padding: 14px 36px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ff5c8a, #c2185b);
+  color: #fff;
+  font-family: var(--font-script);
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(194, 24, 91, 0.35);
+}
+
+/* пасхалка: еле заметное сердечко в углу */
+.secret-heart {
+  position: absolute;
+  left: 22px;
+  bottom: calc(28px + env(safe-area-inset-bottom));
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: none;
+  font-size: 1.3rem;
+  color: var(--deep);
+  opacity: 0.18;
+  cursor: pointer;
+}
+
+.secret-layer {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.burst-piece {
+  position: absolute;
+  font-size: 1.6rem;
+  color: var(--rose);
+}
+
+.secret-msg {
+  position: absolute;
+  max-width: 78%;
+  margin: 0;
+  padding: 18px 22px;
+  text-align: center;
+  font-size: 1.3rem;
+  font-style: italic;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 22px;
+  box-shadow: 0 12px 40px rgba(194, 24, 91, 0.25);
+}
+
+/* ---------- Reasons ---------- */
+.reasons h2,
+.cake h2 {
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-size: 2.3rem;
+  margin: 0 0 12px;
+  color: var(--deep);
+  text-align: center;
+}
+
+.reason-stage {
+  width: 100%;
+  min-height: 200px;
+  display: grid;
+  place-items: center;
+}
+
+.reason-card {
+  position: relative;
+  width: 100%;
+  padding: 34px 24px 28px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid #fff;
+  border-radius: 28px;
+  box-shadow: 0 12px 40px rgba(194, 24, 91, 0.18);
+}
+
+.reason-card p {
+  margin: 0;
+  font-size: 1.4rem;
+  line-height: 1.5;
+}
+
+.reason-num {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--deep);
+  color: #fff;
+  font-family: var(--font-script);
+  font-size: 1.2rem;
+}
+
+.reason-action {
+  position: relative;
+  margin-top: 26px;
+  width: 110px;
+  height: 110px;
+  display: grid;
+  place-items: center;
+}
+
+.big-heart {
+  border: none;
+  background: none;
+  font-size: 6rem;
+  line-height: 1;
+  color: var(--rose);
+  cursor: pointer;
+  filter: drop-shadow(0 8px 16px rgba(194, 24, 91, 0.35));
+}
+
+.reason-count {
+  margin: 10px 0 0;
+  font-style: italic;
+  font-size: 1.05rem;
+  opacity: 0.8;
+}
+
+.burst-root {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+/* ---------- Cake ---------- */
+.cake-svg {
+  width: min(88vw, 400px);
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 10px 20px rgba(194, 24, 91, 0.2));
+}
+
+.cake .bday {
+  font-size: 3rem;
+}
+
+.cake-controls {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.again-btn.small {
+  padding: 10px 28px;
+  font-size: 1.25rem;
+}
+
+.cake-hint {
+  margin: 0;
+  max-width: 280px;
+  text-align: center;
+  font-style: italic;
+  font-size: 1.05rem;
+  opacity: 0.85;
+}
+
+.cake-sub {
+  margin: 18px 0 0;
+  font-size: 1.3rem;
+  font-style: italic;
+  text-align: center;
+}
+
+.fireworks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.fw-burst {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.fw-dot {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  margin: -3px;
+  border-radius: 50%;
+}
+
+/* ---------- UI ---------- */
+.dots {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(194, 24, 91, 0.3);
+  transition: all 0.5s ease;
+}
+
+.dot.active {
+  background: var(--deep);
+  height: 22px;
+  border-radius: 4px;
+}
+
+.music-btn {
+  position: absolute;
+  top: calc(16px + env(safe-area-inset-top));
+  right: 16px;
+  z-index: 10;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(6px);
+  color: var(--deep);
+  font-size: 1.4rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 14px rgba(194, 24, 91, 0.2);
+}
+
+.music-btn.on .note {
+  animation: bob 1.4s ease-in-out infinite;
+}
+
+.music-btn .slash {
+  position: absolute;
+  width: 26px;
+  height: 2px;
+  background: var(--deep);
+  transform: rotate(-45deg);
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-3px) rotate(12deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg, .music-btn.on .note { animation: none; }
+}
