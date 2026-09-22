@@ -16,9 +16,9 @@ import { poem, wishes } from './content.js'
 // переход на такие экраны и с них идёт через точки-индикатор или стрелку «дальше»
 const SCREENS = [
   { long: false, render: () => <Intro /> },
-  { long: !!poem.long, render: () => <TextScreen {...poem} /> },
+  { long: !!poem.long, render: ({ go }) => <TextScreen {...poem} go={go} /> },
   { long: false, render: () => <Reasons /> },
-  { long: !!wishes.long, render: () => <TextScreen {...wishes} /> },
+  { long: !!wishes.long, render: ({ go }) => <TextScreen {...wishes} go={go} /> },
   { long: false, render: () => <Cake /> },
   { long: false, render: ({ restart }) => <Finale restart={restart} /> },
 ]
