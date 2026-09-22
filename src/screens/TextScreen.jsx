@@ -37,23 +37,23 @@ export default function TextScreen({ title, lines, long = false, go }) {
 
       {long && (
         <motion.button
-          className="next-hint"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.4, duration: 1 }}
+          className="again-btn next-btn"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.4, duration: 0.9 }}
+          whileTap={{ scale: 0.95 }}
           onClick={(e) => {
             e.stopPropagation()
             go?.(1)
           }}
-          aria-label="Дальше"
         >
+          дальше
           <motion.span
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+            animate={{ y: [0, 5, 0] }}
+            transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
           >
             ⌄
           </motion.span>
-          дальше
         </motion.button>
       )}
     </div>

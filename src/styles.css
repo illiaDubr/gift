@@ -462,28 +462,17 @@ body,
   border-radius: 4px;
 }
 
-.next-hint {
-  position: absolute;
-  bottom: calc(18px + env(safe-area-inset-bottom));
-  left: 50%;
-  transform: translateX(-50%);
+.next-btn {
+  margin-top: 22px;
+  padding: 12px 30px;
+  font-size: 1.25rem;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0;
-  border: none;
-  background: none;
-  color: var(--deep);
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 0.95rem;
-  opacity: 0.75;
-  cursor: pointer;
-  padding: 6px 14px;
+  gap: 8px;
 }
 
-.next-hint span {
-  font-size: 1.4rem;
+.next-btn span {
+  font-size: 1.2rem;
   line-height: 1;
 }
 
